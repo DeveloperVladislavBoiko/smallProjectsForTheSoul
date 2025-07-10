@@ -5,7 +5,8 @@ import subprocess
 import sys
 
 """
-Данный код требует постоянного подключения к интернету, код кросплатформенный, но должным образом текстиролвался только на Linux manjaro 
+Данный код требует подключения к интернету, без него он не работает, код поддерживается на Linux, Windows, Macos
+Должным образом тестировался только на Linux Manjaro 
 """
 
 def text_to_speech(file_path, lang='ru', slow=False, voice_variant='com'):
@@ -31,7 +32,7 @@ def text_to_speech(file_path, lang='ru', slow=False, voice_variant='com'):
 
     except FileNotFoundError:
         return False
-    
+
 
 def play_audio(file_path):
     """
@@ -59,7 +60,7 @@ def play_audio(file_path):
 
     for player_cmd in players:
         try:
-            # Проверка наличия плеера (Linux/Mac)
+            # Проверка Linux/Mac
             if system in ['Linux', 'Darwin']:
                 try:
                     subprocess.run(
@@ -71,7 +72,6 @@ def play_audio(file_path):
                 except subprocess.CalledProcessError:
                     continue
 
-            # Воспроизведение
             subprocess.run(
                 player_cmd,
                 check=True,
@@ -79,12 +79,11 @@ def play_audio(file_path):
                 stderr=subprocess.DEVNULL,
                 shell=(system == 'Windows')
             )
-            return True  # Успешное воспроизведение
+            return True
 
         except subprocess.CalledProcessError:
             continue
         except Exception as e:
-            print(f"Ошибка при воспроизведении: {e}", file=sys.stderr)
             continue
 
     print("Не удалось воспроизвести аудио. Установите один из плееров:",
